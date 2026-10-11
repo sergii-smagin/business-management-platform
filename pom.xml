@@ -15,6 +15,9 @@
 	<description>Business Management Platform</description>
 	<properties>
 		<java.version>25</java.version>
+		<logback.version>1.6.5</logback.version>
+		<jackson-bom.version>3.1.7</jackson-bom.version>
+		<tomcat.version>11.0.26</tomcat.version>
 	</properties>
 	<dependencies>
 		<dependency>
