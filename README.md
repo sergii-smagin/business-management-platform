@@ -148,6 +148,48 @@ The roadmap is milestone-based rather than calendar-based.
 10. **Advanced Deployment** — Kubernetes and operational deployment practices.
 11. **AI-Assisted Business Capabilities** — controlled LLM tools, structured output, evaluation, and AI observability.
 
+## Local PostgreSQL Setup
+
+The project provides a PostgreSQL 18 development database through Docker Compose.
+The Spring Boot application is not yet connected to PostgreSQL.
+
+**Prerequisite:** Docker Desktop (or Docker Engine) with Docker Compose.
+
+From the repository root, create your local environment file in PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Set `BMP_DB_PASSWORD` in `.env` to a non-empty password for local development.
+Do not commit `.env` to Git.
+
+Start PostgreSQL:
+
+```powershell
+docker compose up -d db
+```
+
+Connection details for a local SQL client such as DBeaver:
+
+| Setting | Value |
+|---|---|
+| Host | `127.0.0.1` |
+| Port | `5432` |
+| Database | `bmp` |
+| User | `bmp` |
+| Password | Value of `BMP_DB_PASSWORD` in `.env` |
+
+Check the service status with `docker compose ps`.
+Stop and remove the Compose containers and network without deleting the database volume:
+
+```powershell
+docker compose down
+```
+
+PostgreSQL data is kept in a named Docker volume and persists across container recreation.
+Avoid `docker compose down -v` unless you explicitly intend to remove the project's database data.
+
 ## Documentation
 
 Repository documentation is limited to information that belongs with the software itself.
