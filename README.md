@@ -221,7 +221,3 @@ Repository documentation is limited to information that belongs with the softwar
 - Additional technical documentation may be added under `docs/` as the implementation grows.
 
 Internal planning, learning workflow, and task-tracking documents are maintained separately from the public repository.
-
-## Development Status
-
-The project is currently in the foundation stage.
