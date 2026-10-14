@@ -150,8 +150,7 @@ The roadmap is milestone-based rather than calendar-based.
 
 ## Local PostgreSQL Setup
 
-The project provides a PostgreSQL 18 development database through Docker Compose.
-The Spring Boot application is not yet connected to PostgreSQL.
+The project provides a PostgreSQL 18 development database through Docker Compose. The Spring Boot application connects to this database using the `local` profile.
 
 **Prerequisite:** Docker Desktop (or Docker Engine) with Docker Compose.
 
@@ -179,6 +178,29 @@ Connection details for a local SQL client such as DBeaver:
 | Database | `bmp` |
 | User | `bmp` |
 | Password | Value of `BMP_DB_PASSWORD` in `.env` |
+
+### Run Spring Boot with PostgreSQL
+
+The `local` Spring profile loads `src/main/resources/application-local.properties`, which configures JDBC to connect to `jdbc:postgresql://localhost:5432/bmp` as user `bmp`. The database password is resolved from the `BMP_DB_PASSWORD` environment variable; it is not stored in the application configuration.
+
+**Important:** Docker Compose reads `.env` when starting the database, but launching Spring Boot separately does not automatically load that file. The Spring Boot process must receive `BMP_DB_PASSWORD` as an environment variable, using the same password as in `.env`.
+
+In IntelliJ IDEA, open the application Run Configuration and set:
+
+- **Active profiles:** `local` (alternatively, add `--spring.profiles.active=local` to Program arguments).
+- **Environment variables:** `BMP_DB_PASSWORD` with the password from the local `.env` file.
+
+Then run `BusinessManagementPlatformApplication`.
+
+Alternatively, from PowerShell, after making `BMP_DB_PASSWORD` available in the current shell's environment, run:
+
+```powershell
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=local"
+```
+
+The application starts on `http://localhost:8080`. JDBC connections are obtained through the configured DataSource as needed; successful application startup alone does not confirm database connectivity.
+
+### Stop PostgreSQL
 
 Check the service status with `docker compose ps`.
 Stop and remove the Compose containers and network without deleting the database volume:
