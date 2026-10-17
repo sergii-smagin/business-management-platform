@@ -198,7 +198,22 @@ Alternatively, from PowerShell, after making `BMP_DB_PASSWORD` available in the 
 .\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=local"
 ```
 
-The application starts on `http://localhost:8080`. JDBC connections are obtained through the configured DataSource as needed; successful application startup alone does not confirm database connectivity.
+The application starts on `http://localhost:8080`. With Flyway enabled, a successful `local` startup also confirms that Flyway could connect to PostgreSQL and validate or apply the pending migrations. Database-backed application operations should still be tested separately when implemented.
+
+### Database Migrations
+
+Database schema changes are managed by Flyway using version-controlled SQL migration files in `src/main/resources/db/migration`.
+
+When Spring Boot starts with the `local` profile, Flyway validates the existing migration history and applies pending migrations in version order before the application begins serving HTTP requests.
+
+The initial migrations are:
+
+- `V1__create_organizations.sql` — creates the `organizations` table with its primary key and name constraints.
+- `V2__create_warehouses.sql` — creates the `warehouses` table with its primary key, name constraints, and foreign key to `organizations`.
+
+Flyway records applied migrations, versions, checksums, and outcomes in `public.flyway_schema_history`. Already-applied versioned migrations are not executed again on subsequent starts. Do not edit an applied versioned migration; create a new versioned SQL file for any subsequent schema change.
+
+The PostgreSQL database itself is initialized by Docker Compose on first setup. Flyway manages the schema objects within that database.
 
 ### Stop PostgreSQL
 
